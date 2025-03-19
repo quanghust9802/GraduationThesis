@@ -1,0 +1,5 @@
+C:\Users\Admin\Downloads\GraduationThesis\Infrastructure\obj\Debug\net8.0\Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Admin\Downloads\GraduationThesis\Infrastructure\obj\Debug\net8.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Downloads\GraduationThesis\Infrastructure\obj\Debug\net8.0\Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Admin\Downloads\GraduationThesis\Infrastructure\obj\Debug\net8.0\Infrastructure.AssemblyInfo.cs
+C:\Users\Admin\Downloads\GraduationThesis\Infrastructure\obj\Debug\net8.0\Infrastructure.csproj.CoreCompileInputs.cache
