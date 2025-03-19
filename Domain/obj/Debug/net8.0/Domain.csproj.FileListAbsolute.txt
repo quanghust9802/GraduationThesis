@@ -1,0 +1,6 @@
+C:\Users\Admin\source\repos\GraduationThesis\Domain\obj\Debug\net8.0\Domain.Resource.ResourceENG.resources
+C:\Users\Admin\source\repos\GraduationThesis\Domain\obj\Debug\net8.0\Domain.csproj.GenerateResource.cache
+C:\Users\Admin\source\repos\GraduationThesis\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\GraduationThesis\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\GraduationThesis\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+C:\Users\Admin\source\repos\GraduationThesis\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
