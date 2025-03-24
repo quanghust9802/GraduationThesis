@@ -1,7 +1,7 @@
 ﻿using Application.AuthProvide;
 using Application.Common;
-using Application.Common.Paging;
 using Application.DTOs.AuthDTOs;
+using Application.DTOs.NotificationDTOs;
 using Application.IRepositories;
 using Application.Services.ImageServices;
 using AutoMapper;
@@ -19,8 +19,9 @@ namespace Application.Services
         private readonly IMapper _mapper;
         private readonly IValidator<UserDTO> _validator;
         private readonly IImageService _imageService;
+        private readonly IUserRoleRepository _userRoleRepository;
 
-        public UserService(IUserRepository userRepo, ITokenService tokenService, IMapper mapper, IValidator<UserDTO> validator, IImageService imageService
+        public UserService(IUserRepository userRepo, ITokenService tokenService, IMapper mapper, IValidator<UserDTO> validator, IImageService imageService, IUserRoleRepository userRoleRepository
             )
         {
             _userRepo = userRepo;
@@ -28,6 +29,7 @@ namespace Application.Services
             _mapper = mapper;
             _validator = validator;
             _imageService = imageService;
+            _userRoleRepository = userRoleRepository;
         }
         public async Task<UserResponse> GetByIdAsync(int id)
         {
@@ -37,14 +39,27 @@ namespace Application.Services
 
         }
 
-        public async Task<IEnumerable<UserResponse>> GetAllAsync()
+        public async Task<ResponseApi> GetAllAsync()
         {
             var users = await _userRepo.GetAllAsync();
             var dtos = _mapper.Map<IEnumerable<UserResponse>>(users);
-            return dtos;
+            return new ResponseApi
+            {
+                Data = dtos,
+                ErrCode = 200,
+            };
         }
-
-        public async Task<UserResponse> InsertAsync(UserDTO dto, IFormFile file)
+        public async Task<ResponseApi> GetAllUserRole()
+        {
+            var userRoles = await _userRoleRepository.GetAllAsync();
+            var dtos = _mapper.Map<IEnumerable<UserRoleReponse>>(userRoles);
+            return new ResponseApi
+            {
+                Data = dtos,
+                ErrCode = 200,
+            };
+        }
+        public async Task<ResponseApi> InsertAsync(UserDTO dto, IFormFile file)
         {
             var imageUrl = await _imageService.UploadImageAsync(file);
 
@@ -57,93 +72,236 @@ namespace Application.Services
 
             var user = _mapper.Map<User>(dto);
             user.ImageUrl = imageUrl;
-            user = await _userRepo.GenerateUserInformation(user);
-
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.CreatedAt = DateTime.Now;
-            await _userRepo.InsertAsync(user);
+            var result = await _userRepo.InsertAsync(user);
 
             user = await FindUserByUserNameAsync(user.Username);
             var res = _mapper.Map<UserResponse>(user);
-            return res;
+            if (result > 0)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 200,
+                    Data = res,
+                    ErrDesc = "Thêm mới người dùng thành công"
+                };
+            }
+            else
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    Data = null,
+                    ErrDesc = "Thêm mói người dùng không thành công"
+                };
+            }
+
+        }
+
+        public async Task<ResponseApi> RegisterAsync(UserDTO dto, IFormFile file)
+        {
+            var imageUrl = await _imageService.UploadImageAsync(file);
+
+            var validationResult = await _validator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+                throw new DataInvalidException(string.Join(", ", errors));
+            }
+
+            var user = _mapper.Map<User>(dto);
+            user.ImageUrl = imageUrl;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.CreatedAt = DateTime.Now;
+            var result = await _userRepo.InsertAsync(user);
+
+            user = await FindUserByUserNameAsync(user.Username);
+            var res = _mapper.Map<UserResponse>(user);
+            if (result > 0)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 200,
+                    Data = res,
+                    ErrDesc = "Thêm mới người dùng thành công"
+                };
+            }
+            else
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    Data = null,
+                    ErrDesc = "Thêm mói người dùng không thành công"
+                };
+            }
 
         }
 
         //change password
-        public async Task<bool> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO)
+        public async Task<ResponseApi> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO)
         {
-            var user = await _userRepo.GetByIdAsync(changePasswordDTO.Id) ?? throw new NotFoundException();
+            var user = await _userRepo.GetByIdAsync(changePasswordDTO.Id);
+
+            if (user == null)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 404,
+                    ErrDesc = "Không tìm thấy người dùng"
+                };
+            }
+
             bool checkPassword = BCrypt.Net.BCrypt.Verify(changePasswordDTO.OldPassword, user.Password);
             if (!checkPassword)
             {
-                throw new DataInvalidException("Password is incorrect");
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    ErrDesc = "Mật khẩu không chính xác"
+                };
             }
+
             if (changePasswordDTO.NewPassword == changePasswordDTO.OldPassword)
             {
-                throw new DataInvalidException("Do not re-enter the old password");
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    ErrDesc = "Không được nhập lại mật khẩu cũ"
+                };
             }
+
             var check = new PasswordRegex();
             if (!check.IsPasswordValid(changePasswordDTO.NewPassword))
-                throw new DataInvalidException("The password having at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol");
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    ErrDesc = "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt"
+                };
+            }
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDTO.NewPassword);
             user.ModifiedAt = DateTime.UtcNow;
-            user.ModifiedBy = user.FirstName;
 
-            await _userRepo.UpdateAsync(user);
+            var result = await _userRepo.UpdateAsync(user);
 
-            return true;
+            if (result > 0)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 200,
+                    ErrDesc = "Đổi mật khẩu thành công"
+                };
+            }
+            else
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 500,
+                    ErrDesc = "Có lỗi xảy ra, vui lòng thử lại"
+                };
+            }
         }
+
 
 
         public async Task<User?> FindUserByUserNameAsync(string email) => await _userRepo.FindUserByUserNameAsync(email);
 
-        public async Task<LoginResponse> LoginAsync(LoginDTO dto)
+        public async Task<ResponseApi> LoginAsync(LoginDTO dto)
         {
-            var getUser = await _userRepo.FindUserByUserNameAsync(dto.UserName!);
-            if (getUser == null)
-                return new LoginResponse(false, "User not found");
+            var getUser = await _userRepo.FindUserByUserNameAsync(dto.Username!);
 
-            if (getUser.IsDeleted == true)
-                throw new ForbiddenException("Your account has been disabled");
+            if (getUser == null)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 404,
+                    ErrDesc = "Không tìm thấy người dùng"
+                };
+            }
+
+            if (getUser.IsLocked)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 403,
+                    ErrDesc = "Tài khoản của bạn đã bị khóa"
+                };
+            }
 
             var checkPassword = BCrypt.Net.BCrypt.Verify(dto.Password, getUser.Password);
 
-            return checkPassword ? new LoginResponse(true, "Login success", _tokenService.GenerateJWTWithUser(getUser)) : new LoginResponse(false, "Invalid username or password. Please try again.");
+            if (!checkPassword)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    ErrDesc = "Tên đăng nhập hoặc mật khẩu không chính xác. Vui lòng thử lại"
+                };
+            }
+
+            var token = _tokenService.GenerateJWTWithUser(getUser);
+
+            return new ResponseApi
+            {
+                ErrCode = 200,
+                Data = new
+                {
+                    Token = token,
+                    UserId = getUser.Id,
+                    FullName = getUser.FullName,
+                    Role = getUser.UserRole.RoleType
+                },
+                ErrDesc = "Đăng nhập thành công"
+            };
         }
 
-        public async Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request)
-        {
-            var res = await _userRepo.GetFilterAsync(request);
-            var dtos = _mapper.Map<IEnumerable<UserResponse>>(res.Data);
-            return new(dtos, res.TotalCount);
-
-        }
-
-        public async Task DisableUserAsync(int userId)
+        public async Task<ResponseApi> DisableUserAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId);
+
             if (user == null)
             {
-                throw new NotFoundException("User not found");
-            }
-            if (user.IsDeleted == true)
-            {
-                throw new NotAllowedException("User has been disabled");
+                return new ResponseApi
+                {
+                    ErrCode = 404,
+                    ErrDesc = "Không tìm thấy người dùng"
+                };
             }
 
+            if (user.IsLocked)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    ErrDesc = "Người dùng này đã bị khóa trước đó"
+                };
+            }
 
             user.IsDeleted = true;
             await _userRepo.UpdateAsync(user);
+
+            return new ResponseApi
+            {
+                ErrCode = 200,
+                ErrDesc = "Khóa người dùng thành công"
+            };
         }
 
-        public async Task<UserResponse> UpdateAsync(int id, UserDTO dto, IFormFile file)
+
+        public async Task<ResponseApi> UpdateAsync(int id, UserDTO dto, IFormFile file)
         {
             var imageUrl = await _imageService.UploadImageAsync(file);
             var user = await _userRepo.GetByIdAsync(id);
             if (user == null)
             {
-                throw new NotFoundException("User not found");
+                return new ResponseApi
+                {
+                    ErrCode = 404,
+                    ErrDesc = "Không tìm thấy  người dùng"
+                };
             }
             var validationResult = await _validator.ValidateAsync(dto);
             if (!validationResult.IsValid)
@@ -153,47 +311,49 @@ namespace Application.Services
             }
 
             user.DateOfBirth = (DateTime)dto.DateOfBirth!;
-            user.FirstName = dto.FirstName;
-            user.LastName = dto.LastName;
+            user.FullName = dto.FullName;
             user.Address = dto.Address;
             user.Gender = dto.Gender;
             user.PhoneNumber = dto.PhoneNumber;
-            user.RoleType = dto.RoleType;
             user.ModifiedAt = DateTime.UtcNow;
             user.ImageUrl = imageUrl;
+            if (dto.UserRoleId != null)
+            {
+                var userRole = await _userRoleRepository.GetByIdAsync(dto.UserRoleId);
+                if (userRole == null)
+                {
+                    return new ResponseApi
+                    {
+                        ErrCode = 404,
+                        ErrDesc = "Không tìm thấy vai trò người dùng"
+                    };
+                }
+                user.UserRoleId = userRole.Id;
+            }
 
-            try
-            {
-                await _userRepo.UpdateAsync(user);
-            }
-            catch (Exception ex)
-            {
-                throw new DataInvalidException(ex.Message);
-            }
 
             var res = _mapper.Map<UserResponse>(user);
-            return res;
-        }
+            var result = await _userRepo.UpdateAsync(user);
 
-        public async Task<IEnumerable<UserResponse>> GetStaffList()
-        {
-            var user = await _userRepo.GetStaffList();
-            var dtos = _mapper.Map<IEnumerable<UserResponse>>(user);
-            return dtos;
-        }
+            if (result > 0)
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 200,
+                    Data = res,
+                    ErrDesc = "Cập nhật người dùng thành công"
+                };
+            }
+            else
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    Data = null,
+                    ErrDesc = "Cập nhật không thành công"
+                };
+            }
 
-        public async Task<IEnumerable<UserResponse>> GetQualityStaffList()
-        {
-            var user = await _userRepo.GetQualityStaffList();
-            var dtos = _mapper.Map<IEnumerable<UserResponse>>(user);
-            return dtos;
-        }
-
-        public async Task<IEnumerable<UserResponse>> GetShipperList()
-        {
-            var user = await _userRepo.GetShipperList();
-            var dtos = _mapper.Map<IEnumerable<UserResponse>>(user);
-            return dtos;
         }
 
     }

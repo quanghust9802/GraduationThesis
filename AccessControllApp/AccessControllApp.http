@@ -1,0 +1,6 @@
+@AccessControllApp_HostAddress = http://localhost:5209
+
+GET {{AccessControllApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

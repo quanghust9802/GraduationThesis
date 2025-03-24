@@ -7,7 +7,6 @@ namespace Application.AuthProvide
     {
         string GenerateJWT(IEnumerable<Claim>? additionalClaims = null);
         string GenerateJWTWithUser(User user, IEnumerable<Claim>? additionalClaims = null);
-        string GenerateJWTWithCustomer(Customer customer, IEnumerable<Claim>? additionalClaims = null);
 
     }
 }

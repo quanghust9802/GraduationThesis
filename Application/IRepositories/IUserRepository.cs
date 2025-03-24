@@ -1,19 +1,13 @@
-﻿using Application.Common.Paging;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.IRepositories
 {
     public interface IUserRepository : IBaseRepository<User>
     {
         Task<User?> FindUserByUserNameAsync(string userName);
-        Task<User> GenerateUserInformation(User user);
-        Task<PaginationResponse<User>> GetFilterAsync(UserFilterRequest request);
 
-        Task<IEnumerable<User>> GetStaffList();
+        Task<int?> GetAdminUserIdAsync();
 
-        Task<IEnumerable<User>> GetQualityStaffList();
-
-        Task<IEnumerable<User>> GetShipperList();
     }
 }
 

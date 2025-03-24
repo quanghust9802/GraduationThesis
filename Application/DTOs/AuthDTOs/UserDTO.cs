@@ -1,28 +1,27 @@
-﻿using Application.Common.Converter;
-using Domain.Enum;
-using ProcessManagement.Domain.Enum;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using AccessControllSystem.Domain.Enum;
 
 
 namespace Application.DTOs.AuthDTOs
 {
     public class UserDTO
     {
-        public string FirstName { get; set; } = "";
+        public string CccdId { get; set; }
+        public string Username { get; set; } = "";
 
-        [StringLength(maximumLength: 40)]
-        public string LastName { get; set; } = "";
+        public string Password { get; set; } = "";
+
+        public string FullName { get; set; } = "";
+
         public Gender Gender { get; set; }
-
-        public Role RoleType { get; set; }
-
         public string PhoneNumber { get; set; } = "";
+
+        //public string ImageUrl { get; set; }
+
+        public DateTime? DateOfBirth { get; set; }
 
         public string Address { get; set; } = "";
 
-        public DateTime DateOfBirth { get; set; }
-
-
+        public int UserRoleId { get; set; }
+        public string? Email { get; set; }
     }
 }

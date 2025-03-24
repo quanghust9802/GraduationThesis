@@ -1,9 +1,9 @@
-﻿namespace Domain.Entities
-{
-    public class AccessRequest
-    {
+﻿using AccessControllSystem.Domain.Entities;
 
-        public int Id { get; set; }
+namespace Domain.Entities
+{
+    public class AccessRequest : BaseEntity
+    {
         public int UserRequestId { get; set; }
 
         public int UserApprovalid { get; set; }
@@ -15,8 +15,14 @@
         public string Purpose { get; set; }
 
         //trạng thái duyệt request
-        public int status { get; set; }
+        public int status { get; set; } //chờ duyệt/ đồng ý/ từ chối.
 
         public DateTime ApprovalAt { get; set; }
+        public virtual User RequestUser { get; set; }
+
+        public virtual User ApproveUser { get; set; }
+
+        public virtual ICollection<AccessLogs> AccessLogs { get; set; }
+
     }
 }

@@ -27,23 +27,26 @@ namespace Infrastructure.Repositories
             return await _table.FindAsync(id);
         }
 
-        public virtual async Task InsertAsync(TEntity entity)
+        public virtual async Task<int> InsertAsync(TEntity entity)
         {
             _table.Add(entity);
-            await SaveChangeAsync();
+            var result = await _context.SaveChangesAsync();
+            return result;
 
         }
 
-        public virtual async Task UpdateAsync(TEntity entity)
+        public virtual async Task<int> UpdateAsync(TEntity entity)
         {
             _table.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
-            await SaveChangeAsync();
+            var result = await _context.SaveChangesAsync();
+            return result;
         }
-        public virtual async Task DeleteAsync(TEntity entity)
+        public virtual async Task<int> DeleteAsync(TEntity entity)
         {
             _table.Remove(entity);
-            await SaveChangeAsync();
+            var result = await _context.SaveChangesAsync();
+            return result;
         }
         public async Task SaveChangeAsync()
         {

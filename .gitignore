@@ -1,0 +1,41 @@
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Visual Studio Code
+.vscode
+.vs
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Log file
+*LogFiles/
+src/**/LogFiles/
+src/**/Temp/
+/src/Services/Category/Category.API/LogFiles/internal-nlog.txt
+/src/Services/Identity/Identity.API/LogFiles/internal-nlog.txt
+/src/Web/Invoice.Web/LogFiles/internal-nlog.txt
+/src/Web/Invoice.Web/wwwroot/js/training.js

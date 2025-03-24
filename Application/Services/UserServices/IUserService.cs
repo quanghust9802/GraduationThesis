@@ -1,4 +1,4 @@
-﻿using Application.Common.Paging;
+﻿using Application.Common;
 using Application.DTOs.AuthDTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -9,26 +9,23 @@ namespace Application.Services
     {
         Task<User?> FindUserByUserNameAsync(string email);
 
-        Task<LoginResponse> LoginAsync(LoginDTO dto);
+        Task<ResponseApi> LoginAsync(LoginDTO dto);
 
         Task<UserResponse> GetByIdAsync(int id);
 
-        Task<IEnumerable<UserResponse>> GetAllAsync();
+        Task<ResponseApi> GetAllAsync();
 
 
-        Task<bool> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO);
+        Task<ResponseApi> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO);
 
-        Task<PaginationResponse<UserResponse>> GetFilterAsync(UserFilterRequest request);
+        Task<ResponseApi> InsertAsync(UserDTO dto, IFormFile file);
 
-        Task<UserResponse> InsertAsync(UserDTO dto, IFormFile file);
+        Task<ResponseApi> RegisterAsync(UserDTO dto, IFormFile file);
 
-        Task DisableUserAsync(int userId);
+        Task<ResponseApi> DisableUserAsync(int userId);
 
-        Task<UserResponse> UpdateAsync(int id, UserDTO dto, IFormFile file);
+        Task<ResponseApi> UpdateAsync(int id, UserDTO dto, IFormFile file);
 
-        Task<IEnumerable<UserResponse>> GetStaffList();
-
-        Task<IEnumerable<UserResponse>> GetQualityStaffList();
-        Task<IEnumerable<UserResponse>> GetShipperList();
+        Task<ResponseApi> GetAllUserRole();
     }
 }

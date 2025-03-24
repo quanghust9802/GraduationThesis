@@ -52,9 +52,9 @@ namespace Application.AuthProvide
             var claims = new List<Claim>
                 {
                     new("UserId", user.Id.ToString()),
-                    new("UserName", user.UserName),
+                    new("Username", user.Username),
                     new("Address", user.Address.ToString()),
-                    new(ClaimTypes.Role, user.RoleType.ToString()),
+                    new(ClaimTypes.Role, user.UserRole.RoleType.ToString()),
                     new ("ModifyAt", user.ModifiedAt.ToString()!)
                 };
             if (additionalClaims?.Any() == true)
@@ -63,21 +63,6 @@ namespace Application.AuthProvide
             return GenerateJWT(claims);
         }
 
-        public string GenerateJWTWithCustomer(Customer customer, IEnumerable<Claim>? additionalClaims = null)
-        {
-            var claims = new List<Claim>
-                {
-                    new("UserId", customer.Id.ToString()),
-                    new("UserName", customer.UserName),
-                    new("Address", customer.Address.ToString()),
-                    new(ClaimTypes.Role, customer.Role.ToString()),
-                    new ("ModifyAt", customer.ModifiedAt.ToString()!)
-                };
-            if (additionalClaims?.Any() == true)
-                claims.AddRange(additionalClaims!);
-
-            return GenerateJWT(claims);
-        }
 
         private static SymmetricSecurityKey GetSecurityKey(IConfiguration _configuration) =>
             new(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
