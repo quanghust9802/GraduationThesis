@@ -10,12 +10,16 @@ namespace Infrastructure.Repositories
         public UserRepository(AccessControllContext context) : base(context)
         {
         }
-        public async Task<User?> FindUserByUserNameAsync(string username) => await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Username == username);
+        public async Task<User?> FindUserByUserNameAsync(string username)
+            => await _context.Users
+                .AsNoTracking()
+                .Include(u => u.UserRole)
+                .FirstOrDefaultAsync(u => u.Username == username);
 
         public async Task<int?> GetAdminUserIdAsync()
         {
             return await _context.Users
-                .Where(user => user.UserRole.RoleType == RoleType.Admin)
+                .Where(user => user.UserRoleId == 2)
                 .Select(user => user.Id)
                 .FirstOrDefaultAsync();
         }

@@ -43,6 +43,17 @@ namespace Application.Services.NotificationService
             };
         }
 
+        public async Task<ResponseApi> GetNotificationsByUserId(int userId)
+        {
+            var notifications = await _notificationRepository.GetNotificationsByUserId(userId);
+            var dtos = _mapper.Map<IEnumerable<NotificationResponse>>(notifications);
+            return new ResponseApi
+            {
+                Data = dtos,
+                ErrCode = 200,
+            };
+        }
+
         public async Task<ResponseApi> AddNotification(NotificationResponse dto)
         {
             try

@@ -114,6 +114,8 @@ namespace Application.Services
             user.ImageUrl = imageUrl;
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.CreatedAt = DateTime.Now;
+            //register guest
+            user.UserRoleId = 4;
             var result = await _userRepo.InsertAsync(user);
 
             user = await FindUserByUserNameAsync(user.Username);
@@ -252,7 +254,7 @@ namespace Application.Services
                     Token = token,
                     UserId = getUser.Id,
                     FullName = getUser.FullName,
-                    Role = getUser.UserRole.RoleType
+                    Role = getUser.UserRole.RoleName
                 },
                 ErrDesc = "Đăng nhập thành công"
             };
@@ -313,13 +315,13 @@ namespace Application.Services
             user.DateOfBirth = (DateTime)dto.DateOfBirth!;
             user.FullName = dto.FullName;
             user.Address = dto.Address;
-            user.Gender = dto.Gender;
+            user.Gender = (AccessControllSystem.Domain.Enum.Gender)dto.Gender;
             user.PhoneNumber = dto.PhoneNumber;
             user.ModifiedAt = DateTime.UtcNow;
             user.ImageUrl = imageUrl;
             if (dto.UserRoleId != null)
             {
-                var userRole = await _userRoleRepository.GetByIdAsync(dto.UserRoleId);
+                var userRole = await _userRoleRepository.GetByIdAsync((int)dto.UserRoleId);
                 if (userRole == null)
                 {
                     return new ResponseApi

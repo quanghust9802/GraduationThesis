@@ -6,6 +6,6 @@ namespace Application.IRepositories
     {
         Task<List<AccessLogs>> GetByUserId(int userId);
         Task<List<AccessLogs>> GetByRequestId(int requestId);
-        Task<List<AccessLogs>> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId);
+        Task<List<AccessLogs>> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId);
     }
 }

@@ -16,7 +16,7 @@ namespace Application.Services.AccessRequestServices
 
         Task<ResponseApi> UpdateStatus(int id, int status);
 
-        Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId);
+        Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId);
 
 
         Task<ResponseApi> GetByStatus(int? userId, int? status);

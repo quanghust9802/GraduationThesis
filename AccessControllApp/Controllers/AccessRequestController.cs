@@ -65,9 +65,9 @@ namespace AccessControllApp.Controllers
         }
 
         [HttpGet("get-filter")]
-        public async Task<IActionResult> GetFilter([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] int? requestId)
+        public async Task<IActionResult> GetFilter([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] int? requestId, [FromQuery] int? userId)
         {
-            var dtos = await _accessRequestService.GetByFilterAsync(startDate, endDate, requestId);
+            var dtos = await _accessRequestService.GetByFilterAsync(startDate, endDate, requestId, userId);
             return Ok(dtos);
         }
         [HttpGet("get-status")]

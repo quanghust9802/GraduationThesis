@@ -62,8 +62,15 @@ namespace Acces.Controllers
         }
 
 
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync([FromForm] UserDTO dto, [FromForm] IFormFile imageUrl)
+        {
+            var res = await _userService.RegisterAsync(dto, imageUrl);
+            return Ok(res);
+        }
+
         [HttpPut("disable/{id}")]
-        [Authorize(Roles = nameof(UserRole.RoleType))]
+        [Authorize(Roles = nameof(UserRole.RoleName))]
         public async Task<IActionResult> DisableUserAsync(int id)
         {
             await _userService.DisableUserAsync(id);
@@ -71,7 +78,7 @@ namespace Acces.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = nameof(UserRole.RoleType))]
+        [Authorize(Roles = nameof(UserRole.RoleName))]
         public async Task<IActionResult> UpdateAsync(int id, [FromForm] UserDTO dto, [FromForm] IFormFile imageUrl)
         {
             var res = await _userService.UpdateAsync(id, dto, imageUrl);

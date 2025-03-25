@@ -4,6 +4,7 @@ using Application.Hubs;
 using Application.IRepositories;
 using Application.Middleware;
 using Application.Services;
+using Application.Services.AccessLogServices;
 using Application.Services.AccessRequestServices;
 using Application.Services.ImageServices;
 using Application.Services.NotificationService;
@@ -102,6 +103,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IAccessRequestService, AccessRequestService>();
+builder.Services.AddScoped<IAccessLogService, AccessLogService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
 
@@ -110,6 +113,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<INotificationRepostiory, NotificatioRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IAccessRequestrRepository, AccessRequestRepository>();
+builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
+builder.Services.AddScoped<INotificationRepostiory, NotificatioRepository>();
 
 
 

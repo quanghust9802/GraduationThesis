@@ -72,6 +72,10 @@ namespace Application.Services.AccessRequestServices
                         Message = $"Có một yêu cầu truy cập mới từ người dùng ID: {accessRequest.UserRequestId}.",
                         SendAt = DateTime.UtcNow
                     };
+                    if (_hubContext == null)
+                    {
+                        throw new InvalidOperationException("HubContext is not initialized.");
+                    }
 
                     await _hubContext.Clients.User(notification.UserId.ToString()).SendAsync("ReceiveNotification", notification.Message);
                 }
@@ -193,11 +197,14 @@ namespace Application.Services.AccessRequestServices
 
                 var notification = new NotificationResponse
                 {
-                    UserId = accessRequest.UserRequestId,
+                    UserId = (int)accessRequest.UserRequestId,
                     Message = $"Yêu cầu của bạn đã được cập nhật trạng thái: {statusMessage}",
                     SendAt = DateTime.UtcNow
                 };
-
+                if (_hubContext == null)
+                {
+                    throw new InvalidOperationException("HubContext is not initialized.");
+                }
                 await _hubContext.Clients.User(notification.UserId.ToString()).SendAsync("ReceiveNotification", notification.Message);
 
                 return new ResponseApi
@@ -218,9 +225,9 @@ namespace Application.Services.AccessRequestServices
 
 
 
-        public async Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId)
+        public async Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId)
         {
-            var data = await _accessRequestRepo.GetByFilterAsync(startDate, endDate, requestId);
+            var data = await _accessRequestRepo.GetByFilterAsync(startDate, endDate, requestId, userId);
             var dto = _mapper.Map<List<AccessRequestDTO>>(data);
             return new ResponseApi
             {

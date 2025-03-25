@@ -128,9 +128,9 @@ namespace Application.Services.AccessRequestServices
             }
         }
 
-        public async Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId)
+        public async Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId)
         {
-            var data = await _accessLogRepository.GetByFilterAsync(startDate, endDate, requestId);
+            var data = await _accessLogRepository.GetByFilterAsync(startDate, endDate, requestId, userId);
             var dto = _mapper.Map<List<AccessLogResponse>>(data);
             return new ResponseApi
             {

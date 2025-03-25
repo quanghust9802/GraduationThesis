@@ -54,7 +54,7 @@ namespace Application.AuthProvide
                     new("UserId", user.Id.ToString()),
                     new("Username", user.Username),
                     new("Address", user.Address.ToString()),
-                    new(ClaimTypes.Role, user.UserRole.RoleType.ToString()),
+                    new(ClaimTypes.Role, user.UserRole.RoleName),
                     new ("ModifyAt", user.ModifiedAt.ToString()!)
                 };
             if (additionalClaims?.Any() == true)

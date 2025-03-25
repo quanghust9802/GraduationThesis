@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccessControllApp.Migrations
 {
     [DbContext(typeof(AccessControllContext))]
-    partial class AccessControllContextModelSnapshot : ModelSnapshot
+    [Migration("20250324070503_UpdateRoleTOString")]
+    partial class UpdateRoleTOString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,7 @@ namespace AccessControllApp.Migrations
                     b.Property<int?>("AccessRequestId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("AccessTime")
+                    b.Property<DateTime>("AccessTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -45,10 +48,10 @@ namespace AccessControllApp.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Status")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -68,13 +71,13 @@ namespace AccessControllApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ApprovalAt")
+                    b.Property<DateTime>("ApprovalAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("EndTime")
+                    b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("IsDeleted")
@@ -84,18 +87,19 @@ namespace AccessControllApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Purpose")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("StartTime")
+                    b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserApprovalid")
+                    b.Property<int>("UserApprovalid")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserRequestId")
+                    b.Property<int>("UserRequestId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("status")
+                    b.Property<int>("status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -143,6 +147,7 @@ namespace AccessControllApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CccdId")
@@ -156,6 +161,7 @@ namespace AccessControllApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
@@ -163,7 +169,7 @@ namespace AccessControllApp.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int?>("Gender")
+                    b.Property<int>("Gender")
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
@@ -185,9 +191,10 @@ namespace AccessControllApp.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserRoleId")
+                    b.Property<int>("UserRoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -238,7 +245,8 @@ namespace AccessControllApp.Migrations
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("AccessLogs")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("AccessRequest");
 
@@ -250,12 +258,14 @@ namespace AccessControllApp.Migrations
                     b.HasOne("Domain.Entities.User", "ApproveUser")
                         .WithMany("ApprovedAccessRequests")
                         .HasForeignKey("UserApprovalid")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "RequestUser")
                         .WithMany("RequestedAccessRequests")
                         .HasForeignKey("UserRequestId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ApproveUser");
 
@@ -278,7 +288,8 @@ namespace AccessControllApp.Migrations
                     b.HasOne("Domain.Entities.UserRole", "UserRole")
                         .WithMany("Users")
                         .HasForeignKey("UserRoleId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("UserRole");
                 });

@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
             return data;
         }
 
-        public async Task<List<AccessLogs>> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId)
+        public async Task<List<AccessLogs>> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId)
         {
             var query = _context.AccessLogs.AsQueryable();
 
@@ -39,6 +39,10 @@ namespace Infrastructure.Repositories
             if (requestId.HasValue)
             {
                 query = query.Where(log => log.AccessRequestId == requestId.Value);
+            }
+            if (userId.HasValue)
+            {
+                query = query.Where(log => log.UserId == userId.Value);
             }
 
             return await query.ToListAsync();

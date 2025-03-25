@@ -11,5 +11,7 @@ namespace Application.Services.NotificationService
         Task<ResponseApi> AddNotification(NotificationResponse dto);
 
         Task<ResponseApi> DeleteAsync(int id);
+
+        Task<ResponseApi> GetNotificationsByUserId(int userId);
     }
 }

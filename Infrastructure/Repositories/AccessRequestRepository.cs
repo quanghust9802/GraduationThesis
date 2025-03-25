@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
             _context.Update(entity);
             return await _context.SaveChangesAsync();
         }
-        public async Task<List<AccessRequest>> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? status)
+        public async Task<List<AccessRequest>> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? status, int? userId)
         {
             var query = _context.AccessRequests.AsQueryable();
 
@@ -42,7 +42,10 @@ namespace Infrastructure.Repositories
             {
                 query = query.Where(request => request.status == status.Value);
             }
-
+            if (userId.HasValue)
+            {
+                query = query.Where(request => request.UserRequestId == userId.Value);
+            }
             return await query.ToListAsync();
         }
 
