@@ -66,6 +66,28 @@ namespace Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<(AccessRequest, string)> VerifyInfor(string cccd)
+        {
+            if (string.IsNullOrEmpty(cccd))
+            {
+                return (null, null);
+            }
+
+            var user = await _context.Users
+                .Where(x => x.CccdId == cccd)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return (null, null);
+            }
+
+            var accessRequest = await _context.AccessRequests
+                .Where(r => r.UserRequestId == user.Id)
+                .FirstOrDefaultAsync();
+
+            return (accessRequest, user.Mrz);
+        }
 
 
     }

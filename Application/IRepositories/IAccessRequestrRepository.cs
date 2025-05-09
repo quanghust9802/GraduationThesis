@@ -9,5 +9,7 @@ namespace Application.IRepositories
         Task<List<AccessRequest>> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? status, int? userId);
 
         Task<List<AccessRequest>> GetByStatus(int? userId, int? status);
+
+        Task<(AccessRequest, string)> VerifyInfor(string cccd);
     }
 }

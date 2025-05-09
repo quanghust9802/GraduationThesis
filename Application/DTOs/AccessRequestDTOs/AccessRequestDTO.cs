@@ -21,5 +21,7 @@
         public DateTime? ModifiedAt { get; set; }
         public bool? IsDeleted { get; set; } = false;
 
+        public string? Mrz { get; set; }
+
     }
 }

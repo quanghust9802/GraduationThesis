@@ -16,6 +16,7 @@ using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Net;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -134,7 +135,13 @@ builder.Services.AddSingleton(cloudinary);
 // Thêm SignalR vào services
 builder.Services.AddSignalR();
 
-
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(IPAddress.Any, 7244, listenOptions =>
+    {
+        listenOptions.UseHttps();
+    });
+});
 
 
 

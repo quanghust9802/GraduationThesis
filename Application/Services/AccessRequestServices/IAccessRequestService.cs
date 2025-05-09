@@ -16,9 +16,11 @@ namespace Application.Services.AccessRequestServices
 
         Task<ResponseApi> UpdateStatus(int id, int status);
 
-        Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId);
+        Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? status, int? userId);
 
 
         Task<ResponseApi> GetByStatus(int? userId, int? status);
+
+        Task<ResponseApi> VerifyInfor(string cccd);
     }
 }

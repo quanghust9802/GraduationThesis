@@ -1,4 +1,5 @@
-﻿using Application.AuthProvide;
+﻿using AccessControllSystem.Domain.Enum;
+using Application.AuthProvide;
 using Application.Common;
 using Application.DTOs.AuthDTOs;
 using Application.DTOs.NotificationDTOs;
@@ -74,6 +75,8 @@ namespace Application.Services
             user.ImageUrl = imageUrl;
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.CreatedAt = DateTime.Now;
+            user.Mrz = GenerateMrz(dto);
+
             var result = await _userRepo.InsertAsync(user);
 
             user = await FindUserByUserNameAsync(user.Username);
@@ -99,6 +102,69 @@ namespace Application.Services
 
         }
 
+        private string GenerateMrz(UserDTO dto)
+        {
+            // Kiểm tra CccdId bắt buộc
+            if (string.IsNullOrEmpty(dto.CccdId))
+                throw new DataInvalidException("Số CCCD không được để trống");
+
+            // --- Dòng 1 ---
+            // Loại giấy tờ (ID) và quốc gia (VNM)
+            string documentType = "ID";
+            string nationality = "VNM";
+
+            // Số CCCD: Lấy 9 ký tự đầu, bổ sung '<' nếu thiếu
+            string documentNumber = dto.CccdId.Length >= 9 ? dto.CccdId.Substring(0, 9) : dto.CccdId.PadRight(9, '<');
+            string checkDigitDocNumber = CalculateCheckDigit(documentNumber);
+
+            // Phần tùy chọn: Điền '<' để đủ 36 ký tự
+            string optionalData = "".PadRight(21, '<');
+
+            // Tạo dòng 1: IDVNM0123456789<1234567890123<<<<<<
+            string line1 = $"{documentType}{nationality}{documentNumber}{checkDigitDocNumber}{optionalData}";
+
+            string dateOfBirth = dto.DateOfBirth?.ToString("yyMMdd") ?? "000000";
+            string checkDigitDob = CalculateCheckDigit(dateOfBirth);
+
+            string gender = dto.Gender switch
+            {
+                Gender.Male => "M",
+                Gender.Female => "F",
+                _ => "X"
+            };
+
+            // Ngày hết hạn: Giả sử 10 năm sau
+            string expiryDate = DateTime.Now.AddYears(10).ToString("yyMMdd");
+            string checkDigitExpiry = CalculateCheckDigit(expiryDate);
+
+            string optionalData2 = "".PadRight(17, '<');
+
+            string compositeCheckDigit = CalculateCheckDigit(
+                documentNumber + dateOfBirth + expiryDate);
+
+            string line2 = $"{dateOfBirth}{checkDigitDob}{gender}{expiryDate}{checkDigitExpiry}{nationality}{optionalData2}{compositeCheckDigit}";
+
+            return $"{line1}\n{line2}";
+        }
+
+        private string CalculateCheckDigit(string input)
+        {
+            int sum = 0;
+            int[] weights = { 7, 3, 1 };
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                int value = input[i] switch
+                {
+                    '<' => 0,
+                    >= '0' and <= '9' => input[i] - '0',
+                    _ => input[i] - 'A' + 10
+                };
+                sum += value * weights[i % 3];
+            }
+
+            return (sum % 10).ToString();
+        }
         public async Task<ResponseApi> RegisterAsync(UserDTO dto, IFormFile file)
         {
             var imageUrl = await _imageService.UploadImageAsync(file);
@@ -114,6 +180,9 @@ namespace Application.Services
             user.ImageUrl = imageUrl;
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.CreatedAt = DateTime.Now;
+            user.Mrz = GenerateMrz(dto);
+
+
             //register guest
             user.UserRoleId = 4;
             var result = await _userRepo.InsertAsync(user);

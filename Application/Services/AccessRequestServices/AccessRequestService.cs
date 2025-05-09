@@ -2,7 +2,6 @@
 using Application.Common;
 using Application.DTOs.AccessRequestDTOs;
 using Application.DTOs.AuthDTOs;
-using Application.DTOs.NotificationDTOs;
 using Application.Hubs;
 using Application.IRepositories;
 using AutoMapper;
@@ -60,42 +59,48 @@ namespace Application.Services.AccessRequestServices
 
             var res = _mapper.Map<AccessRequestDTO>(accessRequest);
 
+            //if (result > 0)
+            //{
+            //    var adminId = await _userRepo.GetAdminUserIdAsync();
+
+            //    if (adminId != null)
+            //    {
+            //        var notification = new NotificationResponse
+            //        {
+            //            UserId = adminId.Value,
+            //            Message = $"Có một yêu cầu truy cập mới từ người dùng ID: {accessRequest.UserRequestId}.",
+            //            SendAt = DateTime.UtcNow
+            //        };
+            //        if (_hubContext == null)
+            //        {
+            //            throw new InvalidOperationException("HubContext is not initialized.");
+            //        }
+
+            //        await _hubContext.Clients.User(notification.UserId.ToString()).SendAsync("ReceiveNotification", notification.Message);
+            //    }
+
+            //    return new ResponseApi
+            //    {
+            //        ErrCode = 200,
+            //        Data = res,
+            //        ErrDesc = "Thêm mới yêu cầu thành công"
+            //    };
+            //}
+            //else
             if (result > 0)
             {
-                var adminId = await _userRepo.GetAdminUserIdAsync();
-
-                if (adminId != null)
-                {
-                    var notification = new NotificationResponse
-                    {
-                        UserId = adminId.Value,
-                        Message = $"Có một yêu cầu truy cập mới từ người dùng ID: {accessRequest.UserRequestId}.",
-                        SendAt = DateTime.UtcNow
-                    };
-                    if (_hubContext == null)
-                    {
-                        throw new InvalidOperationException("HubContext is not initialized.");
-                    }
-
-                    await _hubContext.Clients.User(notification.UserId.ToString()).SendAsync("ReceiveNotification", notification.Message);
-                }
-
                 return new ResponseApi
                 {
                     ErrCode = 200,
                     Data = res,
-                    ErrDesc = "Thêm mới yêu cầu thành công"
-                };
-            }
-            else
-            {
-                return new ResponseApi
-                {
-                    ErrCode = 400,
-                    Data = null,
                     ErrDesc = "Thêm mới yêu cầu không thành công"
                 };
             }
+            return new ResponseApi
+            {
+                ErrCode = 400,
+                ErrDesc = "Thêm mới yêu cầu không thành công"
+            };
         }
 
 
@@ -188,24 +193,24 @@ namespace Application.Services.AccessRequestServices
             if (result > 0)
             {
                 // Lấy chuỗi trạng thái tương ứng
-                string statusMessage = status switch
-                {
-                    1 => "Chờ duyệt",
-                    2 => "Đã duyệt",
-                    3 => "Bị từ chối",
-                };
+                //string statusMessage = status switch
+                //{
+                //    1 => "Chờ duyệt",
+                //    2 => "Đã duyệt",
+                //    3 => "Bị từ chối",
+                //};
 
-                var notification = new NotificationResponse
-                {
-                    UserId = (int)accessRequest.UserRequestId,
-                    Message = $"Yêu cầu của bạn đã được cập nhật trạng thái: {statusMessage}",
-                    SendAt = DateTime.UtcNow
-                };
-                if (_hubContext == null)
-                {
-                    throw new InvalidOperationException("HubContext is not initialized.");
-                }
-                await _hubContext.Clients.User(notification.UserId.ToString()).SendAsync("ReceiveNotification", notification.Message);
+                //var notification = new NotificationResponse
+                //{
+                //    UserId = (int)accessRequest.UserRequestId,
+                //    Message = $"Yêu cầu của bạn đã được cập nhật trạng thái: {statusMessage}",
+                //    SendAt = DateTime.UtcNow
+                //};
+                //if (_hubContext == null)
+                //{
+                //    throw new InvalidOperationException("HubContext is not initialized.");
+                //}
+                //await _hubContext.Clients.User(notification.UserId.ToString()).SendAsync("ReceiveNotification", notification.Message);
 
                 return new ResponseApi
                 {
@@ -213,21 +218,18 @@ namespace Application.Services.AccessRequestServices
                     ErrDesc = "Cập nhật trạng thái yêu cầu thành công"
                 };
             }
-            else
+            return new ResponseApi
             {
-                return new ResponseApi
-                {
-                    ErrCode = 400,
-                    ErrDesc = "Cập nhật trạng thái không thành công"
-                };
-            }
+                ErrCode = 400,
+                ErrDesc = "Cập nhật trạng thái không thành công"
+            };
         }
 
 
 
-        public async Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId)
+        public async Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? status, int? userId)
         {
-            var data = await _accessRequestRepo.GetByFilterAsync(startDate, endDate, requestId, userId);
+            var data = await _accessRequestRepo.GetByFilterAsync(startDate, endDate, status, userId);
             var dto = _mapper.Map<List<AccessRequestDTO>>(data);
             return new ResponseApi
             {
@@ -246,6 +248,32 @@ namespace Application.Services.AccessRequestServices
                 ErrCode = 200
             };
         }
+
+        public async Task<ResponseApi> VerifyInfor(string cccd)
+        {
+            var (accessRequest, mrz) = await _accessRequestRepo.VerifyInfor(cccd);
+
+            if (accessRequest == null)
+            {
+                return new ResponseApi
+                {
+                    Data = null,
+                    ErrCode = 404,
+                    ErrDesc = "Không tìm thấy thông tin xác thực"
+                };
+            }
+
+            var dto = _mapper.Map<AccessRequestDTO>(accessRequest);
+            dto.Mrz = mrz;
+
+            return new ResponseApi
+            {
+                Data = new List<AccessRequestDTO> { dto },
+                ErrCode = 200,
+                ErrDesc = "Tìm thấy thông tin xác thực"
+            };
+        }
+
 
 
     }

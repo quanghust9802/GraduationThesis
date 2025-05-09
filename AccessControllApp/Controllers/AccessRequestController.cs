@@ -65,15 +65,22 @@ namespace AccessControllApp.Controllers
         }
 
         [HttpGet("get-filter")]
-        public async Task<IActionResult> GetFilter([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] int? requestId, [FromQuery] int? userId)
+        public async Task<IActionResult> GetFilter([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] int? status, [FromQuery] int? userId)
         {
-            var dtos = await _accessRequestService.GetByFilterAsync(startDate, endDate, requestId, userId);
+            var dtos = await _accessRequestService.GetByFilterAsync(startDate, endDate, status, userId);
             return Ok(dtos);
         }
         [HttpGet("get-status")]
         public async Task<IActionResult> GetByStatus([FromQuery] int? userId, [FromQuery] int? status)
         {
             var dtos = await _accessRequestService.GetByStatus(userId, status);
+            return Ok(dtos);
+        }8
+
+        [HttpGet("verify-infor")]
+        public async Task<IActionResult> VerifyInfor([FromQuery] string cccd)
+        {
+            var dtos = await _accessRequestService.VerifyInfor(cccd);
             return Ok(dtos);
         }
 

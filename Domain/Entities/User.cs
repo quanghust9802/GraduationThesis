@@ -36,6 +36,8 @@ namespace Domain.Entities
 
         public bool IsLocked { get; set; }
 
+        public string Mrz { get; set; }
+
 
         public virtual ICollection<AccessRequest> RequestedAccessRequests { get; set; } = new List<AccessRequest>();
 
