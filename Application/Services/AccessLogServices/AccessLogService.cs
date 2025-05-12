@@ -1,8 +1,10 @@
 ﻿using Application.AuthProvide;
 using Application.Common;
 using Application.DTOs.AccessLogDTOs;
+using Application.DTOs.NotificationDTOs;
 using Application.IRepositories;
 using Application.Services.AccessLogServices;
+using Application.Services.NotificationService;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -15,13 +17,17 @@ namespace Application.Services.AccessRequestServices
         private readonly IMapper _mapper;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IAccessLogRepository _accessLogRepository;
-        public AccessLogService(IUserRepository userRepo, ITokenService tokenService, IMapper mapper, IUserRoleRepository userRoleRepository, IAccessRequestrRepository accessRequestRepository, IAccessLogRepository accessLogRepostiory
+        private readonly IUserRepository _userRepository;
+        private readonly INotificationService _notificationService;
+        public AccessLogService(IUserRepository userRepo, ITokenService tokenService, IMapper mapper, IUserRoleRepository userRoleRepository, IAccessRequestrRepository accessRequestRepository, IAccessLogRepository accessLogRepostiory, IUserRepository userRepository, INotificationService notificationService
             )
         {
             _tokenService = tokenService;
             _mapper = mapper;
             _userRoleRepository = userRoleRepository;
             _accessLogRepository = accessLogRepostiory;
+            _userRepository = userRepository;
+            _notificationService = notificationService;
         }
         public async Task<AccessLogResponse> GetByIdAsync(int id)
         {
@@ -137,6 +143,37 @@ namespace Application.Services.AccessRequestServices
                 Data = dto,
                 ErrCode = 200
             };
+        }
+
+
+
+        public async Task ProcessAccessLogAsync(AccessLogDTO accessLogDto)
+        {
+            var user = await _userRepository.GetUserByCccdId(accessLogDto.CccdId);
+            if (user == null)
+            {
+                throw new Exception($"User with CCCD {accessLogDto.CccdId} not found");
+            }
+
+            var accessLog = new AccessLogs
+            {
+                UserId = user.Id,
+                AccessTime = accessLogDto.AccessTime,
+                Status = accessLogDto.Status,
+                AccessRequestId = null,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _accessLogRepository.InsertAsync(accessLog);
+            var notificationMessage = new NotificationResponse
+            {
+                Message = $"Người dùng {accessLogDto.CccdId} vào lúc {accessLogDto.AccessTime:yyyy-MM-ddTHH:mm:ss}, trạng thái: {(accessLogDto.Status == 1 ? "allowed" : "denied")}",
+                IsRead = false,
+                SendAt = DateTime.UtcNow,
+                UserId = user.Id
+            };
+
+            await _notificationService.AddNotification(notificationMessage);
         }
 
 

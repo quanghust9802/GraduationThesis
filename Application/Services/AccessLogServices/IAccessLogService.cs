@@ -16,6 +16,7 @@ namespace Application.Services.AccessLogServices
         Task<ResponseApi> GetByRequestIdAsync(int requestId);
 
         Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? requestId, int? userId);
+        Task ProcessAccessLogAsync(AccessLogDTO accessLogDto);
     }
 
 }

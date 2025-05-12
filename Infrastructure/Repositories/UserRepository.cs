@@ -24,6 +24,12 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<User?> GetUserByCccdId(string cccdId)
+    => await _context.Users
+        .AsNoTracking()
+        .Include(u => u.UserRole)
+        .FirstOrDefaultAsync(u => u.CccdId == cccdId);
+
 
 
 

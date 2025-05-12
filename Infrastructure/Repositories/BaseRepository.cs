@@ -26,13 +26,38 @@ namespace Infrastructure.Repositories
             _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             return await _table.FindAsync(id);
         }
-
         public virtual async Task<int> InsertAsync(TEntity entity)
         {
-            _table.Add(entity);
-            var result = await _context.SaveChangesAsync();
-            return result;
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null.");
+                }
 
+                _table.Add(entity);
+
+                var result = await _context.SaveChangesAsync();
+
+                return result;
+            }
+            catch (DbUpdateException ex)
+            {
+                var errorMessage = $"Error occurred while saving entity: {ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $"\nInner Exception: {ex.InnerException.Message}";
+                }
+
+                Console.WriteLine(errorMessage);
+                throw; 
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Unexpected error occurred while saving entity: {ex.Message}";
+                Console.WriteLine(errorMessage); 
+                throw;
+            }
         }
 
         public virtual async Task<int> UpdateAsync(TEntity entity)

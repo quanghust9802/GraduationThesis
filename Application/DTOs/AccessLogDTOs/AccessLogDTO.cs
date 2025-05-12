@@ -10,5 +10,7 @@
         public DateTime AccessTime { get; set; }
 
         public int Status { get; set; }
+
+        public string CccdId { get; set;}
     }
 }

@@ -12,6 +12,7 @@ using Application.Validations;
 using CloudinaryDotNet;
 using FluentValidation;
 using Infrastructure.Data;
+using Infrastructure.Messaging;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -116,6 +117,9 @@ builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IAccessRequestrRepository, AccessRequestRepository>();
 builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
 builder.Services.AddScoped<INotificationRepostiory, NotificatioRepository>();
+
+//add mqtt messaging
+builder.Services.AddHostedService<MqttService>();
 
 
 

@@ -376,6 +376,19 @@
           "lib/netstandard1.0/_._": {}
         }
       },
+      "MQTTnet/5.0.1.1416": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/MQTTnet.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/MQTTnet.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Newtonsoft.Json/13.0.3": {
         "type": "package",
         "compile": {
@@ -1839,6 +1852,20 @@
         "microsoft.netcore.targets.1.1.3.nupkg.sha512",
         "microsoft.netcore.targets.nuspec",
         "runtime.json"
+      ]
+    },
+    "MQTTnet/5.0.1.1416": {
+      "sha512": "ONYieEMaHiIei5dAtHXywnfJGhmrd5Av5sNJSQERp6AtZdPk3xxjCR6Cv0C5RUr/XbLeHO4/HQ0Rc2bQ5NF5Mw==",
+      "type": "package",
+      "path": "mqttnet/5.0.1.1416",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net8.0/MQTTnet.dll",
+        "lib/net8.0/MQTTnet.xml",
+        "mqttnet.5.0.1.1416.nupkg.sha512",
+        "mqttnet.nuspec",
+        "nuget.png"
       ]
     },
     "Newtonsoft.Json/13.0.3": {
@@ -4191,6 +4218,7 @@
       "CloudinaryDotNet >= 1.27.4",
       "Domain >= 1.0.0",
       "FluentValidation >= 11.11.0",
+      "MQTTnet >= 5.0.1.1416",
       "Microsoft.AspNetCore.Http.Abstractions >= 2.3.0",
       "Microsoft.AspNetCore.SignalR.Core >= 1.2.0",
       "Microsoft.Extensions.Configuration.Abstractions >= 9.0.3",
@@ -4200,23 +4228,23 @@
   },
   "packageFolders": {
     "C:\\Users\\Admin\\.nuget\\packages\\": {},
-    "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages": {}
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\Application.csproj",
+      "projectUniqueName": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\Application.csproj",
       "projectName": "Application",
-      "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\Application.csproj",
+      "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\Application.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\obj\\",
+      "outputPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4224,15 +4252,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\DevExpress 23.2\\Components\\System\\Components\\Packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj"
+            "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj": {
+              "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj"
             }
           }
         }
@@ -4246,7 +4273,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -4267,6 +4295,10 @@
           "FluentValidation": {
             "target": "Package",
             "version": "[11.11.0, )"
+          },
+          "MQTTnet": {
+            "target": "Package",
+            "version": "[5.0.1.1416, )"
           },
           "Microsoft.AspNetCore.Http.Abstractions": {
             "target": "Package",
@@ -4305,7 +4337,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

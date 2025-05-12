@@ -75,7 +75,7 @@ namespace AccessControllApp.Controllers
         {
             var dtos = await _accessRequestService.GetByStatus(userId, status);
             return Ok(dtos);
-        }8
+        }
 
         [HttpGet("verify-infor")]
         public async Task<IActionResult> VerifyInfor([FromQuery] string cccd)

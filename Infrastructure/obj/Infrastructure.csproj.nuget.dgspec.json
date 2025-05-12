@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Infrastructure\\Infrastructure.csproj": {}
+    "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Infrastructure\\Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\Application.csproj": {
+    "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\Application.csproj",
+        "projectUniqueName": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\Application.csproj",
+        "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\obj\\",
+        "outputPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,15 +26,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 23.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj"
+              "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj": {
+                "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj"
               }
             }
           }
@@ -48,7 +47,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -69,6 +69,10 @@
             "FluentValidation": {
               "target": "Package",
               "version": "[11.11.0, )"
+            },
+            "MQTTnet": {
+              "target": "Package",
+              "version": "[5.0.1.1416, )"
             },
             "Microsoft.AspNetCore.Http.Abstractions": {
               "target": "Package",
@@ -107,25 +111,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj": {
+    "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj",
+        "projectUniqueName": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj",
+        "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\obj\\",
+        "outputPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -133,7 +137,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 23.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -151,7 +154,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -178,25 +182,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Infrastructure\\Infrastructure.csproj": {
+    "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Infrastructure\\obj\\",
+        "outputPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -204,18 +208,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 23.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Application\\Application.csproj"
+              "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\Application.csproj": {
+                "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Application\\Application.csproj"
               },
-              "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\Admin\\Downloads\\GraduationThesis\\Domain\\Domain.csproj"
+              "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj": {
+                "projectPath": "D:\\Code\\GraduationThesis-Backend\\GraduationThesis\\Domain\\Domain.csproj"
               }
             }
           }
@@ -229,7 +232,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -242,6 +246,10 @@
             "Dapper": {
               "target": "Package",
               "version": "[2.1.35, )"
+            },
+            "MQTTnet": {
+              "target": "Package",
+              "version": "[5.0.1.1416, )"
             },
             "Microsoft.AspNetCore.SignalR": {
               "target": "Package",
@@ -260,6 +268,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[9.0.4, )"
             }
           },
           "imports": [
@@ -278,7 +290,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

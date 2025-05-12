@@ -8,6 +8,8 @@ namespace Application.IRepositories
 
         Task<int?> GetAdminUserIdAsync();
 
+        Task<User?> GetUserByCccdId(string cccdId);
+
     }
 }
 
