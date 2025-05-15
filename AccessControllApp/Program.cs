@@ -106,8 +106,6 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IAccessRequestService, AccessRequestService>();
 builder.Services.AddScoped<IAccessLogService, AccessLogService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
-
 
 
 //User services
@@ -117,10 +115,6 @@ builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IAccessRequestrRepository, AccessRequestRepository>();
 builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
 builder.Services.AddScoped<INotificationRepostiory, NotificatioRepository>();
-
-//add mqtt messaging
-builder.Services.AddHostedService<MqttService>();
-
 
 
 //Add FluentValidation services
@@ -138,6 +132,8 @@ builder.Services.AddSingleton(cloudinary);
 
 // Thêm SignalR vào services
 builder.Services.AddSignalR();
+
+builder.Services.AddHostedService<MqttService>();
 
 builder.WebHost.ConfigureKestrel(options =>
 {

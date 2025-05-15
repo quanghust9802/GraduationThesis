@@ -19,6 +19,7 @@ namespace Application.Services.AccessRequestServices
         private readonly IAccessLogRepository _accessLogRepository;
         private readonly IUserRepository _userRepository;
         private readonly INotificationService _notificationService;
+
         public AccessLogService(IUserRepository userRepo, ITokenService tokenService, IMapper mapper, IUserRoleRepository userRoleRepository, IAccessRequestrRepository accessRequestRepository, IAccessLogRepository accessLogRepostiory, IUserRepository userRepository, INotificationService notificationService
             )
         {

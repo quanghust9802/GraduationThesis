@@ -10,7 +10,7 @@ namespace Infrastructure.Repositories
         public AccessRequestRepository(AccessControllContext context) : base(context)
         {
         }
-        public async Task<int> UpdateStatus(int id, int status)
+        public async Task<int> UpdateStatus(int id, int status, int userId)
         {
             var entity = await _context.AccessRequests
                 .SingleOrDefaultAsync(x => x.Id == id);
@@ -21,6 +21,7 @@ namespace Infrastructure.Repositories
             }
 
             entity.status = status;
+            entity.UserApprovalid = userId;
             _context.Update(entity);
             return await _context.SaveChangesAsync();
         }

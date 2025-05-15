@@ -1,6 +1,7 @@
 ﻿using AccessControllApplication.Controllers;
 using Application.DTOs.AccessRequestDTOs;
 using Application.Services.AccessRequestServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControllApp.Controllers
@@ -57,10 +58,16 @@ namespace AccessControllApp.Controllers
         }
 
         [HttpPut("update-status")]
-        //[Authorize(Roles = nameof(UserRole.RoleType))]
+        [Authorize]
         public async Task<IActionResult> UpdateStatus([FromQuery] int id, [FromQuery] int status)
         {
-            var res = await _accessRequestService.UpdateStatus(id, status);
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("Không tìm thấy hoặc UserId không hợp lệ trong token");
+            }
+
+            var res = await _accessRequestService.UpdateStatus(id, status, userId);
             return Ok(res);
         }
 

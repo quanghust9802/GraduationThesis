@@ -14,7 +14,7 @@ namespace Application.Services.AccessRequestServices
 
         Task<ResponseApi> DeleteAsync(int id);
 
-        Task<ResponseApi> UpdateStatus(int id, int status);
+        Task<ResponseApi> UpdateStatus(int id, int status, int userId);
 
         Task<ResponseApi> GetByFilterAsync(DateTime? startDate, DateTime? endDate, int? status, int? userId);
 

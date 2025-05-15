@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Buffers;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.DTOs.AccessLogDTOs;
 using Application.Services.AccessLogServices;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
@@ -17,12 +19,11 @@ namespace Infrastructure.Messaging
     {
         private readonly IMqttClient _mqttClient;
         private readonly MqttClientOptions _mqttOptions;
-        private readonly IAccessLogService _accessLogService;
         private readonly ILogger<MqttService> _logger;
+        private readonly IServiceProvider _serviceProvider; 
 
-        public MqttService(IAccessLogService accessLogService, ILogger<MqttService> logger, IConfiguration configuration)
+        public MqttService(ILogger<MqttService> logger, IConfiguration configuration, IServiceProvider serviceProvider)
         {
-            _accessLogService = accessLogService;
             _logger = logger;
             var factory = new MqttClientFactory();
             _mqttClient = factory.CreateMqttClient();
@@ -32,7 +33,9 @@ namespace Infrastructure.Messaging
                 .WithCredentials(configuration["Mqtt:Username"], configuration["Mqtt:Password"])
                 .WithCleanSession()
                 .Build();
+            _serviceProvider = serviceProvider;
         }
+
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -50,7 +53,7 @@ namespace Infrastructure.Messaging
 
             _mqttClient.DisconnectedAsync += async e =>
             {
-                _logger.LogWarning("Disconnected from MQTT broker. Reconnecting in 5 seconds...");
+                _logger.LogWarning("Disconnected from MQTT broker. Reconnecting...");
                 await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
                 try
                 {
@@ -66,7 +69,6 @@ namespace Infrastructure.Messaging
             {
                 var message = Encoding.UTF8.GetString(e.ApplicationMessage.Payload.ToArray());
                 var topic = e.ApplicationMessage.Topic;
-
                 _logger.LogInformation($"Received message: {message} on topic: {topic}");
 
                 try
@@ -74,7 +76,11 @@ namespace Infrastructure.Messaging
                     var accessLogDto = ParseMessage(message, topic);
                     if (accessLogDto != null)
                     {
-                        await _accessLogService.ProcessAccessLogAsync(accessLogDto);
+                        using (var scope = _serviceProvider.CreateScope())
+                        {
+                            var accessLogService = scope.ServiceProvider.GetRequiredService<IAccessLogService>();
+                            await accessLogService.ProcessAccessLogAsync(accessLogDto);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -101,25 +107,35 @@ namespace Infrastructure.Messaging
         {
             try
             {
-                // Ví dụ: Người dùng "123456789" vào lúc 2025-05-12T14:23:00, allowed
-                var parts = message.Split(' ');
-                if (parts.Length < 6) return null;
+                var jsonDoc = JsonDocument.Parse(message);
+                var root = jsonDoc.RootElement;
 
-                var cccd = parts[2].Trim('"');
-                var time = DateTime.Parse(parts[5]);
+                string cccdId = root.GetProperty("cccdId").GetString();
+                string timeString = root.GetProperty("accessTime").GetString();
+                int status = root.GetProperty("status").GetInt32();
 
-                int status = message.Contains("allowed") ? 1 : 0;
+                if (string.IsNullOrEmpty(cccdId) || string.IsNullOrEmpty(timeString))
+                {
+                    _logger.LogWarning("Invalid JSON format: cccdId or accessTime is missing");
+                    return null;
+                }
+
+                if (!DateTime.TryParse(timeString, out var accessTime))
+                {
+                    _logger.LogWarning("Invalid time format: " + timeString);
+                    return null;
+                }
 
                 return new AccessLogDTO
                 {
-                    CccdId = cccd,
-                    AccessTime = time,
+                    CccdId = cccdId,
+                    AccessTime = accessTime,
                     Status = status
                 };
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.LogWarning("Failed to parse message: " + message);
+                _logger.LogWarning(ex, "Failed to parse JSON message: " + message);
                 return null;
             }
         }

@@ -104,11 +104,9 @@ namespace Application.Services
 
         private string GenerateMrz(UserDTO dto)
         {
-            // Kiểm tra CccdId bắt buộc
             if (string.IsNullOrEmpty(dto.CccdId))
                 throw new DataInvalidException("Số CCCD không được để trống");
 
-            // --- Dòng 1 ---
             // Loại giấy tờ (ID) và quốc gia (VNM)
             string documentType = "ID";
             string nationality = "VNM";
@@ -133,8 +131,7 @@ namespace Application.Services
                 _ => "X"
             };
 
-            // Ngày hết hạn: Giả sử 10 năm sau
-            string expiryDate = DateTime.Now.AddYears(10).ToString("yyMMdd");
+            string expiryDate = DateTime.Now.AddYears(5).ToString("yyMMdd");
             string checkDigitExpiry = CalculateCheckDigit(expiryDate);
 
             string optionalData2 = "".PadRight(17, '<');

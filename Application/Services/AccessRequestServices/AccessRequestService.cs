@@ -53,6 +53,22 @@ namespace Application.Services.AccessRequestServices
 
         public async Task<ResponseApi> InsertAsync(AccessRequestDTO dto)
         {
+            //nếu người dùng hiện tại còn yêu cầu tới thời điểm hiện tại thì không cho tạo thêm yêu cầu mới
+            var existingRequest = await _accessRequestRepo.GetByFilterAsync(
+            startDate: null,
+            endDate: null,
+            status: null,
+            userId: dto.UserRequestId
+        );
+
+            if (existingRequest.Any(r => r.EndTime >= DateTime.Now))
+            {
+                return new ResponseApi
+                {
+                    ErrCode = 400,
+                    ErrDesc = "Bạn đã có yêu cầu truy cập còn thời hạn"
+                };
+            }
             var accessRequest = _mapper.Map<AccessRequest>(dto);
             accessRequest.CreatedAt = DateTime.Now;
             var result = await _accessRequestRepo.InsertAsync(accessRequest);
@@ -176,7 +192,7 @@ namespace Application.Services.AccessRequestServices
                 };
             }
         }
-        public async Task<ResponseApi> UpdateStatus(int id, int status)
+        public async Task<ResponseApi> UpdateStatus(int id, int status, int userId)
         {
             var accessRequest = await _accessRequestRepo.GetByIdAsync(id);
             if (accessRequest == null)
@@ -188,7 +204,7 @@ namespace Application.Services.AccessRequestServices
                 };
             }
 
-            var result = await _accessRequestRepo.UpdateStatus(id, status);
+            var result = await _accessRequestRepo.UpdateStatus(id, status, userId);
 
             if (result > 0)
             {
