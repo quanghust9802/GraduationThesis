@@ -63,7 +63,7 @@ namespace Application.Services.AccessRequestServices
         }
         public async Task<ResponseApi> GetAllAsync()
         {
-            var users = await _accessLogRepository.GetAllAsync();
+            var users = await _accessLogRepository.GetAllWithUser();
             var dtos = _mapper.Map<IEnumerable<AccessLogResponse>>(users);
             return new ResponseApi
             {

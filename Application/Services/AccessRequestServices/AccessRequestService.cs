@@ -42,7 +42,7 @@ namespace Application.Services.AccessRequestServices
 
         public async Task<ResponseApi> GetAllAsync()
         {
-            var users = await _accessRequestRepo.GetAllAsync();
+            var users = await _accessRequestRepo.GetAllWithUserAsync();
             var dtos = _mapper.Map<IEnumerable<AccessRequestDTO>>(users);
             return new ResponseApi
             {

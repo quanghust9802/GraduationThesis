@@ -45,7 +45,17 @@ namespace Infrastructure.Repositories
                 query = query.Where(log => log.UserId == userId.Value);
             }
 
-            return await query.ToListAsync();
+            return await query.Include(log => log.User) 
+                                .ToListAsync();
+        }
+
+        public async Task<List<AccessLogs>> GetAllWithUser()
+        {
+            var query = _context.AccessLogs.AsQueryable();
+            return await query
+                .Include(log => log.User)
+                .OrderByDescending(log => log.AccessTime)
+                .ToListAsync();
         }
 
 

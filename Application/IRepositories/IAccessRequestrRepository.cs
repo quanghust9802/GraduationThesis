@@ -11,5 +11,7 @@ namespace Application.IRepositories
         Task<List<AccessRequest>> GetByStatus(int? userId, int? status);
 
         Task<(AccessRequest, string)> VerifyInfor(string cccd);
+
+        Task<IEnumerable<AccessRequest>> GetAllWithUserAsync();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs.AccessRequestDTOs
+﻿using Domain.Entities;
+
+namespace Application.DTOs.AccessRequestDTOs
 {
     public class AccessRequestDTO
     {
@@ -6,6 +8,12 @@
         public int? UserRequestId { get; set; }
 
         public int? UserApprovalid { get; set; }
+        
+        public User? ApproveUser { get; set; }
+
+        public User? RequestUser { get; set; }
+
+
 
         public DateTime? StartTime { get; set; }
 

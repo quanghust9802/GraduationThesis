@@ -54,6 +54,12 @@ namespace AccessControllApp.Controllers
             return Ok(dtos);
         }
 
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAll()
+        {
+            var dtos = await _accessLogService.GetAllAsync();
+            return Ok(dtos);
+        }
     }
 
 }
